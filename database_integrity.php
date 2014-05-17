@@ -55,3 +55,50 @@ $STRUCTURE["tables"]["module_submission_pre_parser_rule_forms"] = array(
     "Default" => ""
   )
 );
+
+
+$HOOKS = array();
+$HOOKS["1.1.3"] = array(
+  array(
+    "hook_type"       => "code",
+    "action_location" => "start",
+    "function_name"   => "ft_process_form",
+    "hook_function"   => "spp_parse",
+    "priority"        => "50"
+  ),
+  array(
+    "hook_type"       => "code",
+    "action_location" => "start",
+    "function_name"   => "ft_api_process_form",
+    "hook_function"   => "spp_parse",
+    "priority"        => "50"
+  ),
+  array(
+    "hook_type"       => "code",
+    "action_location" => "start",
+    "function_name"   => "ft_update_submission",
+    "hook_function"   => "spp_parse",
+    "priority"        => "50"
+  ),
+  array(
+    "hook_type"       => "code",
+    "action_location" => "start",
+    "function_name"   => "ft_process_form",
+    "hook_function"   => "spp_parse",
+    "priority"        => "50"
+  ),
+  array(
+    "hook_type"       => "code",
+    "action_location" => "start",
+    "function_name"   => "ft_api_process_form",
+    "hook_function"   => "spp_parse",
+    "priority"        => "50"
+  ),
+  array(
+    "hook_type"       => "code",
+    "action_location" => "start",
+    "function_name"   => "ft_update_submission",
+    "hook_function"   => "spp_parse",
+    "priority"        => "50"
+  )
+);
