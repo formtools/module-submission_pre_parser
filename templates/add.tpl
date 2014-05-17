@@ -11,7 +11,7 @@
 
   <form action="index.php" method="post">
 
-	  <table cellspacing="1" cellpadding="1" border="0">
+	  <table cellspacing="1" cellpadding="1" border="0" width="100%">
 	  <tr>
 	    <td width="100">{$LANG.word_status}</td>
 	    <td>
@@ -32,7 +32,19 @@
 	  <tr>
 	    <td valign="top">{$L.phrase_php_code}</td>
 	    <td>
-	      <textarea name="php_code" id="php_code" style="width:550px; height:200px"></textarea>
+
+		    <div style="border: 1px solid #666666; padding: 3px">
+		      <textarea name="php_code" id="php_code" style="width:100%; height:240px"></textarea>
+		    </div>
+
+		    <script type="text/javascript">
+		    var html_editor = new CodeMirror.fromTextArea("php_code", {literal}{{/literal}
+		    parserfile: ["parsejavascript.js", "tokenizejavascript.js"],
+		    path: "{$g_root_url}/global/codemirror/js/",
+		    stylesheet: "{$g_root_url}/global/codemirror/css/jscolors.css"
+		    {literal}});{/literal}
+		    </script>
+
 	    </td>
 	  </tr>
 	  </table>

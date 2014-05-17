@@ -33,7 +33,18 @@
 	  <tr>
 	    <td valign="top">{$L.phrase_php_code}</td>
 	    <td>
-	      <textarea name="php_code" id="php_code" style="width:550px; height:200px">{$rule_info.php_code}</textarea>
+        <div style="border: 1px solid #666666; padding: 3px">
+	        <textarea name="php_code" id="php_code" style="width:550px; height:200px">{$rule_info.php_code}</textarea>
+	      </div>
+
+		    <script type="text/javascript">
+		    var html_editor = new CodeMirror.fromTextArea("php_code", {literal}{{/literal}
+		    parserfile: ["parsejavascript.js", "tokenizejavascript.js"],
+		    path: "{$g_root_url}/global/codemirror/js/",
+		    stylesheet: "{$g_root_url}/global/codemirror/css/jscolors.css"
+		    {literal}});{/literal}
+		    </script>
+
 	    </td>
 	  </tr>
 	  </table>

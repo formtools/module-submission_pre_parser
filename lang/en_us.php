@@ -16,7 +16,9 @@ $L = array();
 $L["module_name"] = "Submission Pre-Parser";
 $L["module_description"] = "This module is for PHP programmers who'd like to examine the incoming data prior to adding to the database. It lets you add custom PHP to do things such as filtering out or tweaking invalid form values, redirect to alternate pages, combine form fields or to prevent the submission from being added.";
 
+$L["word_help"] = "Help";
 $L["word_settings"] = "Settings";
+
 $L["phrase_add_rule"] = "Add Rule";
 $L["phrase_edit_rule"] = "Edit Rule";
 $L["phrase_rule_id"] = "Rule ID";
@@ -31,3 +33,5 @@ $L["confirm_delete_rule"] = "Are you sure you want to delete this pre-parser rul
 $L["notify_rule_deleted"] = "The pre-parser rule has been deleted.";
 $L["notify_rule_updated"] = "The pre-parser rule has been updated.";
 $L["phrase_num_rules_per_page_c"] = "Num rules listed per page:";
+
+$L["text_help"] = "Please see our <a href=\"http://modules.formtools.org/submission_pre_parser/documentation.php\" target=\"_blank\">online help documentation</a> for information on how to use this module.";

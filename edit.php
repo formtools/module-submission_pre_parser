@@ -13,6 +13,7 @@ $rule_info = spp_get_rule($rule_id);
 
 $page_vars = array();
 $page_vars["head_title"] = $L["phrase_edit_rule"];
+$page_vars["head_string"] = "<script type=\"text/javascript\" src=\"$g_root_url/global/codemirror/js/codemirror.js\"></script>";
 $page_vars["rule_info"]  = $rule_info;
 
 ft_display_module_page("templates/edit.tpl", $page_vars);
