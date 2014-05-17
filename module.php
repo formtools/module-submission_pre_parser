@@ -7,15 +7,15 @@
 $MODULE["author"]          = "Encore Web Studios";
 $MODULE["author_email"]    = "formtools@encorewebstudios.com";
 $MODULE["author_link"]     = "http://www.encorewebstudios.com";
-$MODULE["version"]         = "1.1.4";
-$MODULE["date"]            = "2011-11-22";
+$MODULE["version"]         = "1.0.0-beta-20081229";
+$MODULE["date"]            = "2008-12-29";
 $MODULE["origin_language"] = "en_us";
+$MODULE["supports_ft_versions"] = "2.0.0";
 
 // define the module navigation - the keys are keys defined in the language file. This lets
 // the navigation - like everything else - be customized to the users language
 $MODULE["nav"] = array(
-  "module_name"     => array("index.php", false),
-  "phrase_add_rule" => array("add.php", true),
-  "word_settings"   => array("settings.php", true),
-  "word_help"       => array("help.php", true)
+  "module_name"       => array("index.php", false),
+  "phrase_add_rule"   => array("add.php", true),
+  "word_settings"     => array("settings.php", false)
     );

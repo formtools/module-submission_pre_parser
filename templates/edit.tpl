@@ -1,0 +1,46 @@
+{include file='modules_header.tpl'}
+
+  <table cellpadding="0" cellspacing="0">
+  <tr>
+    <td width="45"><a href="index.php"><img src="images/icon_preparser.gif" border="0" width="34" height="34" /></a></td>
+    <td class="title">{$L.phrase_edit_rule|upper}</td>
+  </tr>
+  </table>
+
+  {include file='messages.tpl'}
+
+  <form action="index.php" method="post">
+    <input type="hidden" name="rule_id" value="{$rule_info.rule_id}" />
+
+	  <table cellspacing="1" cellpadding="1" border="0">
+	  <tr>
+	    <td width="100">{$LANG.word_status}</td>
+	    <td>
+        <input type="radio" name="status" value="enabled" id="status1" {if $rule_info.status == "enabled"}checked{/if} />
+          <label for="status1" class="green">{$LANG.word_enabled}</label>
+        <input type="radio" name="status" value="disabled" id="status2" {if $rule_info.status == "disabled"}checked{/if} />
+          <label for="status2" class="red">{$LANG.word_disabled}</label>
+	    </td>
+	  </tr>
+	  <tr>
+	    <td>{$L.phrase_rule_name}</td>
+	    <td><input type="text" name="rule_name" value="{$rule_info.rule_name|escape}" style="width:300px" maxlength="255" /></td>
+	  </tr>
+	  <tr>
+	    <td valign="top">{$LANG.word_form_sp}</td>
+	    <td>{forms_dropdown name_id="form_ids[]" is_multiple=true default=$rule_info.form_ids}</td>
+	  </tr>
+	  <tr>
+	    <td valign="top">{$L.phrase_php_code}</td>
+	    <td>
+	      <textarea name="php_code" id="php_code" style="width:550px; height:200px">{$rule_info.php_code}</textarea>
+	    </td>
+	  </tr>
+	  </table>
+
+	  <p>
+	    <input type="submit" name="update_rule" value="{$LANG.word_update|upper}" />
+	  </p>
+
+  </form>
+{include file='modules_footer.tpl'}
