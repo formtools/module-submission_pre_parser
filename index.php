@@ -7,7 +7,7 @@ $folder = dirname(__FILE__);
 require_once("$folder/library.php");
 
 if (isset($_POST["add_rule"]))
-	list($g_success, $g_message) = spp_add_rule($_POST);
+  list($g_success, $g_message) = spp_add_rule($_POST);
 else if (isset($_GET["delete"]))
   list($g_success, $g_message) = spp_delete_rule($_GET["delete"]);
 
@@ -28,11 +28,16 @@ $page_vars["pagination"] = ft_get_page_nav($num_results, $settings["num_rules_pe
 $page_vars["js_messages"] = array("word_edit");
 $page_vars["head_js"] =<<< EOF
 var page_ns = {};
-page_ns.delete_rule = function(rule_id)
-{
-  if (confirm("{$L["confirm_delete_rule"]}"))
-    window.location = 'index.php?delete=' + rule_id;
-
+page_ns.delete_rule = function(rule_id) {
+  ft.create_dialog({
+    title:      "{$LANG["phrase_please_confirm"]}",
+    content:    "{$L["confirm_delete_rule"]}",
+    popup_type: "warning",
+    buttons: {
+      "{$LANG["word_yes"]}": function() { window.location = 'index.php?delete=' + rule_id; },
+      "{$LANG["word_no"]}": function() { $(this).dialog("close"); }
+    }
+  });
   return false;
 }
 EOF;

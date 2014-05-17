@@ -3,10 +3,8 @@
 /**
  * This file defines all functions relating to the Submission Pre-Parser module.
  *
- * @copyright Encore Web Studios 2009
+ * @copyright Encore Web Studios 2011
  * @author Encore Web Studios <formtools@encorewebstudios.com>
- * @package 2-0-0
- * @subpackage SubmissionPreParser
  */
 
 
@@ -264,7 +262,12 @@ function spp_get_form_rules($form_id)
 function spp_parse($vars)
 {
   $vars["form_data"]["form_tools_calling_function"] = $vars["form_tools_calling_function"];
-  $_POST = $vars["form_data"];
+
+  $form_data_key = "form_data";
+  if ($vars["form_tools_calling_function"] == "ft_update_submission")
+    $form_data_key = "infohash";
+
+  $_POST = $vars[$form_data_key];
 
   if (isset($vars["form_id"]))
     $form_id = $vars["form_id"];
@@ -275,6 +278,7 @@ function spp_parse($vars)
     return;
 
   $rules = spp_get_form_rules($form_id);
+
   foreach ($rules as $rule_info)
   {
     if ($rule_info["status"] == "disabled")
@@ -288,7 +292,8 @@ function spp_parse($vars)
     eval($rule_info["php_code"]);
   }
 
-  $return_vals = array("form_data" => $_POST);
+  $return_vals = array($form_data_key => $_POST);
+
   return $return_vals;
 }
 
