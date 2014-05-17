@@ -309,7 +309,7 @@ function submission_pre_parser__install($module_id)
       event set('ft_process_form','ft_api_process_form','ft_update_submission') default NULL,
       php_code mediumtext NOT NULL,
       PRIMARY KEY (rule_id)
-    ) ENGINE=MyISAM AUTO_INCREMENT=1
+    ) AUTO_INCREMENT=1
       ";
 
   $queries[] = "
@@ -317,8 +317,7 @@ function submission_pre_parser__install($module_id)
       rule_id mediumint(8) unsigned NOT NULL,
       form_id mediumint(8) unsigned NOT NULL,
       PRIMARY KEY  (rule_id, form_id)
-    ) ENGINE=MyISAM
-      ";
+    )";
 
   $queries[] = "
     INSERT INTO {$g_table_prefix}settings (setting_name, setting_value, module)
@@ -330,7 +329,7 @@ function submission_pre_parser__install($module_id)
     $result = mysql_query($query);
 
     if (!$result)
-      return array(false, "Failed Query: " . mysql_error());
+      return array(false, "Failed query: " . mysql_error());
   }
 
   // register the hooks. This simply adds the POTENTIAL for the module to be called in those

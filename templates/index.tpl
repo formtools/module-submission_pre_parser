@@ -2,8 +2,12 @@
 
   <table cellpadding="0" cellspacing="0">
   <tr>
-    <td width="45"><img src="images/icon_preparser.gif" width="34" height="34" /></td>
-    <td class="title">{$L.module_name|upper}</td>
+    <td width="45"><a href="index.php"><img src="images/icon_preparser.gif" border="0" width="34" height="34" /></a></td>
+    <td class="title">
+      <a href="../../admin/modules">{$LANG.word_modules}</a>
+      <span class="joiner">&raquo;</span>
+      {$L.module_name}
+    </td>
   </tr>
   </table>
 
@@ -27,8 +31,8 @@
       <th>{$L.phrase_rule_name}</th>
       <th>{$LANG.word_status}</th>
       <th>{$LANG.word_form_sp}</th>
-      <th width="60">{$LANG.word_edit|upper}</th>
-      <th width="60" class="del">{$LANG.word_delete|upper}</th>
+      <th class="edit"></th>
+      <th class="del"></th>
     </tr>
 
     {foreach from=$results item=result name=row}
@@ -49,10 +53,9 @@
           {else}
             {forms_dropdown name_id="tmp" display_single_form_as_text=true only_show_forms=$result.form_ids}
           {/if}
-
         </td>
-        <td align="center"><a href="edit.php?rule_id={$rule_id}">{$LANG.word_edit|upper}</a></td>
-        <td class="del" align="center"><a href="#" onclick="return page_ns.delete_rule({$rule_id})">{$LANG.word_delete|upper}</a></td>
+        <td class="edit"><a href="edit.php?rule_id={$rule_id}"></a></td>
+        <td class="del"><a href="#" onclick="return page_ns.delete_rule({$rule_id})"></a></td>
       </tr>
     {/foreach}
 
