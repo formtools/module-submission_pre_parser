@@ -8,8 +8,6 @@ require_once("$folder/library.php");
 
 if (isset($_POST["add_rule"]))
 	list($g_success, $g_message) = spp_add_rule($_POST);
-else if (isset($_POST["update_rule"]))
-	list($g_success, $g_message) = spp_update_rule($_POST["rule_id"], $_POST);
 else if (isset($_GET["delete"]))
   list($g_success, $g_message) = spp_delete_rule($_GET["delete"]);
 

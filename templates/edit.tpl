@@ -9,7 +9,7 @@
 
   {include file='messages.tpl'}
 
-  <form action="index.php" method="post">
+  <form action="{$same_page}" method="post">
     <input type="hidden" name="rule_id" value="{$rule_info.rule_id}" />
 
 	  <table cellspacing="1" cellpadding="1" border="0">
@@ -20,6 +20,20 @@
           <label for="status1" class="green">{$LANG.word_enabled}</label>
         <input type="radio" name="status" value="disabled" id="status2" {if $rule_info.status == "disabled"}checked{/if} />
           <label for="status2" class="red">{$LANG.word_disabled}</label>
+	    </td>
+	  </tr>
+	  <tr>
+	    <td valign="top">{$L.phrase_when_executed}</td>
+	    <td>
+        <input type="checkbox" name="event[]" value="ft_process_form" id="event1"
+          {if "ft_process_form"|in_array:$rule_info.event}checked{/if} />
+          <label for="event1">{$LANG.phrase_on_form_submission}</label><br />
+        <input type="checkbox" name="event[]" value="ft_api_process_form" id="event2"
+          {if "ft_api_process_form"|in_array:$rule_info.event}checked{/if} />
+          <label for="event2">{$L.phrase_on_form_submission_via_api}</label><br />
+        <input type="checkbox" name="event[]" value="ft_update_submission" id="event3"
+          {if "ft_update_submission"|in_array:$rule_info.event}checked{/if} />
+          <label for="event3">{$LANG.phrase_when_submission_is_edited}</label>
 	    </td>
 	  </tr>
 	  <tr>

@@ -24,8 +24,10 @@ $L["phrase_edit_rule"] = "Edit Rule";
 $L["phrase_rule_id"] = "Rule ID";
 $L["phrase_rule_name"] = "Rule Name";
 $L["phrase_php_code"] = "PHP Code";
-$L["notify_no_rules"] = "There are no rules defined for the pre-parser. Please click the button below to add a new rule.";
+$L["phrase_when_executed"] = "When Executed";
+$L["phrase_on_form_submission_via_api"] = "On form submission, via API";
 
+$L["notify_no_rules"] = "There are no rules defined for the pre-parser. Please click the button below to add a new rule.";
 $L["notify_rule_not_added"] = "There was a problem adding this pre-parser rule.";
 $L["notify_rule_added"] = "The pre-parser rule has been added.";
 $L["notify_settings_updated"] = "The settings have been updated";

@@ -13,12 +13,23 @@
 
 	  <table cellspacing="1" cellpadding="1" border="0" width="100%">
 	  <tr>
-	    <td width="100">{$LANG.word_status}</td>
+	    <td width="120">{$LANG.word_status}</td>
 	    <td>
         <input type="radio" name="status" value="enabled" id="status1" checked />
           <label for="status1" class="green">{$LANG.word_enabled}</label>
         <input type="radio" name="status" value="disabled" id="status2" />
           <label for="status2" class="red">{$LANG.word_disabled}</label>
+	    </td>
+	  </tr>
+	  <tr>
+	    <td valign="top">{$L.phrase_when_executed}</td>
+	    <td>
+        <input type="checkbox" name="event[]" value="ft_process_form" id="event1" checked />
+          <label for="event1">{$LANG.phrase_on_form_submission}</label><br />
+        <input type="checkbox" name="event[]" value="ft_api_process_form" id="event2" checked />
+          <label for="event2">{$L.phrase_on_form_submission_via_api}</label><br />
+        <input type="checkbox" name="event[]" value="ft_update_submission" id="event3" />
+          <label for="event3">{$LANG.phrase_when_submission_is_edited}</label>
 	    </td>
 	  </tr>
 	  <tr>
