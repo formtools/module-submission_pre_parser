@@ -390,8 +390,8 @@ function submission_pre_parser__upgrade($old_version, $new_version)
 	  // register the hooks. This simply adds the POTENTIAL for the module to be called in those
 	  // functions. The spp_parse function does the job of processing the user-defined list of
 	  // parsing rules, as entered via the UI. If there are no rules, nothing happens
-	  ft_register_hook("submission_pre_parser", "start", "ft_process_form", "spp_parse");
-	  ft_register_hook("submission_pre_parser", "start", "ft_api_process_form", "spp_parse");
-	  ft_register_hook("submission_pre_parser", "start", "ft_update_submission", "spp_parse");
+	  ft_register_hook("code", "submission_pre_parser", "start", "ft_process_form", "spp_parse");
+	  ft_register_hook("code", "submission_pre_parser", "start", "ft_api_process_form", "spp_parse");
+	  ft_register_hook("code", "submission_pre_parser", "start", "ft_update_submission", "spp_parse");
 	}
 }
