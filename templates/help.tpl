@@ -1,6 +1,6 @@
 {include file='modules_header.tpl'}
 
-	<div class="title">{$L.word_help|upper}</div>
+  <div class="title">{$L.word_help|upper}</div>
 
   <p>
     {$L.text_help}

@@ -22,41 +22,41 @@
  */
 function ssp_get_rules($num_per_page, $page_num = 1)
 {
-	global $g_table_prefix;
+  global $g_table_prefix;
 
-	if ($num_per_page == "all")
-	{
-		$query = mysql_query("
-		  SELECT *
-	    FROM   {$g_table_prefix}module_submission_pre_parser_rules
-	    ORDER BY rule_id
-	      ");
-	}
-	else
-	{
-	  // determine the offset
-	  if (empty($page_num)) { $page_num = 1; }
-		$first_item = ($page_num - 1) * $num_per_page;
+  if ($num_per_page == "all")
+  {
+    $query = mysql_query("
+      SELECT *
+      FROM   {$g_table_prefix}module_submission_pre_parser_rules
+      ORDER BY rule_id
+        ");
+  }
+  else
+  {
+    // determine the offset
+    if (empty($page_num)) { $page_num = 1; }
+    $first_item = ($page_num - 1) * $num_per_page;
 
-	  $query = mysql_query("
-	    SELECT *
-	    FROM   {$g_table_prefix}module_submission_pre_parser_rules
-	    ORDER BY rule_id
-	    LIMIT $first_item, $num_per_page
-		    ") or handle_error(mysql_error());
-	}
+    $query = mysql_query("
+      SELECT *
+      FROM   {$g_table_prefix}module_submission_pre_parser_rules
+      ORDER BY rule_id
+      LIMIT $first_item, $num_per_page
+        ") or handle_error(mysql_error());
+  }
 
-	$count_query = mysql_query("SELECT count(*) as c FROM {$g_table_prefix}module_submission_pre_parser_rules");
-	$count_hash = mysql_fetch_assoc($count_query);
+  $count_query = mysql_query("SELECT count(*) as c FROM {$g_table_prefix}module_submission_pre_parser_rules");
+  $count_hash = mysql_fetch_assoc($count_query);
   $num_results = $count_hash["c"];
 
   $infohash = array();
-	while ($field = mysql_fetch_assoc($query))
-	{
-	  $form_ids = spp_get_rule_forms($field["rule_id"]);
-	  $field["form_ids"] = $form_ids;
+  while ($field = mysql_fetch_assoc($query))
+  {
+    $form_ids = spp_get_rule_forms($field["rule_id"]);
+    $field["form_ids"] = $form_ids;
     $infohash[] = $field;
-	}
+  }
 
   $return_hash["results"] = $infohash;
   $return_hash["num_results"] = $num_results;
@@ -73,12 +73,12 @@ function ssp_get_rules($num_per_page, $page_num = 1)
  */
 function spp_add_rule($info)
 {
-	global $g_table_prefix, $L;
+  global $g_table_prefix, $L;
 
-	$info = ft_sanitize($info);
+  $info = ft_sanitize($info);
 
   $status    = $info["status"];
-	$rule_name = $info["rule_name"];
+  $rule_name = $info["rule_name"];
   $form_ids  = isset($info["form_ids"]) ? $info["form_ids"] : array();
   $event     = isset($info["event"]) ? join(",", $info["event"]) : "";
   $php_code  = $info["php_code"];
@@ -100,13 +100,13 @@ function spp_add_rule($info)
           ") or die(mysql_error());
     }
 
-  	$success = true;
-  	$message = $L["notify_rule_added"];
+    $success = true;
+    $message = $L["notify_rule_added"];
   }
   else
   {
-  	$success = false;
-  	$message = $L["notify_rule_not_added"];
+    $success = false;
+    $message = $L["notify_rule_not_added"];
   }
 
   return array($success, $message);
@@ -120,12 +120,12 @@ function spp_add_rule($info)
  */
 function spp_delete_rule($rule_id)
 {
-	global $g_table_prefix, $L;
+  global $g_table_prefix, $L;
 
-	mysql_query("DELETE FROM {$g_table_prefix}module_submission_pre_parser_rules WHERE rule_id = $rule_id");
-	mysql_query("DELETE FROM {$g_table_prefix}module_submission_pre_parser_rule_forms WHERE rule_id = $rule_id");
+  mysql_query("DELETE FROM {$g_table_prefix}module_submission_pre_parser_rules WHERE rule_id = $rule_id");
+  mysql_query("DELETE FROM {$g_table_prefix}module_submission_pre_parser_rule_forms WHERE rule_id = $rule_id");
 
-	return array(true, $L["notify_rule_deleted"]);
+  return array(true, $L["notify_rule_deleted"]);
 }
 
 
@@ -137,18 +137,18 @@ function spp_delete_rule($rule_id)
  */
 function spp_get_rule($rule_id)
 {
-	global $g_table_prefix;
+  global $g_table_prefix;
 
-	$query = mysql_query("
-	  SELECT *
-	  FROM   {$g_table_prefix}module_submission_pre_parser_rules
-	  WHERE  rule_id = $rule_id
-	    ");
-	$rule_info = mysql_fetch_assoc($query);
+  $query = mysql_query("
+    SELECT *
+    FROM   {$g_table_prefix}module_submission_pre_parser_rules
+    WHERE  rule_id = $rule_id
+      ");
+  $rule_info = mysql_fetch_assoc($query);
 
-	$rule_info["form_ids"] = spp_get_rule_forms($rule_id);
+  $rule_info["form_ids"] = spp_get_rule_forms($rule_id);
 
-	return $rule_info;
+  return $rule_info;
 }
 
 
@@ -178,7 +178,7 @@ function spp_update_settings($info)
  */
 function spp_get_rule_forms($rule_id)
 {
-	global $g_table_prefix;
+  global $g_table_prefix;
 
   $query = mysql_query("SELECT form_id FROM {$g_table_prefix}module_submission_pre_parser_rule_forms WHERE rule_id = $rule_id");
 
@@ -198,34 +198,34 @@ function spp_get_rule_forms($rule_id)
  */
 function spp_update_rule($rule_id, $info)
 {
-	global $g_table_prefix, $L;
+  global $g_table_prefix, $L;
 
-	$info = ft_sanitize($info);
+  $info = ft_sanitize($info);
   $status    = $info["status"];
   $rule_name = $info["rule_name"];
   $event     = isset($info["event"]) ? join(",", $info["event"]) : "";
   $form_ids  = isset($info["form_ids"]) ? $info["form_ids"] : array();
   $php_code  = $info["php_code"];
 
-	mysql_query("
-	  UPDATE {$g_table_prefix}module_submission_pre_parser_rules
-	  SET    status = '$status',
-	         rule_name = '$rule_name',
-	         event = '$event',
-	         php_code = '$php_code'
-	  WHERE  rule_id = $rule_id
-	    ");
+  mysql_query("
+    UPDATE {$g_table_prefix}module_submission_pre_parser_rules
+    SET    status = '$status',
+           rule_name = '$rule_name',
+           event = '$event',
+           php_code = '$php_code'
+    WHERE  rule_id = $rule_id
+      ");
 
-	mysql_query("DELETE FROM {$g_table_prefix}module_submission_pre_parser_rule_forms WHERE rule_id = $rule_id");
-	foreach ($form_ids as $form_id)
-	{
+  mysql_query("DELETE FROM {$g_table_prefix}module_submission_pre_parser_rule_forms WHERE rule_id = $rule_id");
+  foreach ($form_ids as $form_id)
+  {
     mysql_query("
       INSERT INTO {$g_table_prefix}module_submission_pre_parser_rule_forms (rule_id, form_id)
       VALUES ($rule_id, $form_id)
         ") or die(mysql_error());
   }
 
-	return array(true, $L["notify_rule_updated"]);
+  return array(true, $L["notify_rule_updated"]);
 }
 
 
@@ -263,13 +263,13 @@ function spp_get_form_rules($form_id)
  */
 function spp_parse($vars)
 {
-	$vars["form_data"]["form_tools_calling_function"] = $vars["form_tools_calling_function"];
-	$_POST = $vars["form_data"];
+  $vars["form_data"]["form_tools_calling_function"] = $vars["form_tools_calling_function"];
+  $_POST = $vars["form_data"];
 
   if (isset($vars["form_id"]))
     $form_id = $vars["form_id"];
   else
-	  $form_id = $_POST["form_tools_form_id"];
+    $form_id = $_POST["form_tools_form_id"];
 
   if (!isset($form_id) || empty($form_id) || !is_numeric($form_id))
     return;
@@ -302,22 +302,22 @@ function submission_pre_parser__install($module_id)
 
   $queries = array();
   $queries[] = "
-		CREATE TABLE {$g_table_prefix}module_submission_pre_parser_rules (
-		  rule_id mediumint(9) NOT NULL auto_increment,
-		  status enum('enabled','disabled') NOT NULL default 'enabled',
-		  rule_name varchar(255) NOT NULL,
-		  event set('ft_process_form','ft_api_process_form','ft_update_submission') default NULL,
-		  php_code mediumtext NOT NULL,
-		  PRIMARY KEY (rule_id)
-		) ENGINE=InnoDB AUTO_INCREMENT=1
-		  ";
+    CREATE TABLE {$g_table_prefix}module_submission_pre_parser_rules (
+      rule_id mediumint(9) NOT NULL auto_increment,
+      status enum('enabled','disabled') NOT NULL default 'enabled',
+      rule_name varchar(255) NOT NULL,
+      event set('ft_process_form','ft_api_process_form','ft_update_submission') default NULL,
+      php_code mediumtext NOT NULL,
+      PRIMARY KEY (rule_id)
+    ) ENGINE=MyISAM AUTO_INCREMENT=1
+      ";
 
   $queries[] = "
-	  CREATE TABLE {$g_table_prefix}module_submission_pre_parser_rule_forms (
-		  rule_id mediumint(8) unsigned NOT NULL,
-		  form_id mediumint(8) unsigned NOT NULL,
-		  PRIMARY KEY  (rule_id, form_id)
-		) ENGINE=InnoDB
+    CREATE TABLE {$g_table_prefix}module_submission_pre_parser_rule_forms (
+      rule_id mediumint(8) unsigned NOT NULL,
+      form_id mediumint(8) unsigned NOT NULL,
+      PRIMARY KEY  (rule_id, form_id)
+    ) ENGINE=MyISAM
       ";
 
   $queries[] = "
@@ -327,10 +327,10 @@ function submission_pre_parser__install($module_id)
 
   foreach ($queries as $query)
   {
-  	$result = mysql_query($query);
+    $result = mysql_query($query);
 
-  	if (!$result)
-  	  return array(false, "Failed Query: " . mysql_error());
+    if (!$result)
+      return array(false, "Failed Query: " . mysql_error());
   }
 
   // register the hooks. This simply adds the POTENTIAL for the module to be called in those
@@ -358,12 +358,12 @@ function submission_pre_parser__install($module_id)
  */
 function submission_pre_parser__uninstall($module_id)
 {
-	global $g_table_prefix;
+  global $g_table_prefix;
 
-	mysql_query("DROP TABLE {$g_table_prefix}module_submission_pre_parser_rules");
-	mysql_query("DROP TABLE {$g_table_prefix}module_submission_pre_parser_rule_forms");
+  mysql_query("DROP TABLE {$g_table_prefix}module_submission_pre_parser_rules");
+  mysql_query("DROP TABLE {$g_table_prefix}module_submission_pre_parser_rule_forms");
 
-	return array(true, "");
+  return array(true, "");
 }
 
 
@@ -375,23 +375,29 @@ function submission_pre_parser__uninstall($module_id)
  */
 function submission_pre_parser__upgrade($old_version, $new_version)
 {
-	global $g_table_prefix;
+  global $g_table_prefix;
 
-	$old_version_info = ft_get_version_info($old_version);
-	$new_version_info = ft_get_version_info($new_version);
+  $old_version_info = ft_get_version_info($old_version);
+  $new_version_info = ft_get_version_info($new_version);
 
-	if ($old_version_info["release_date"] < 20090114)
-	{
+  if ($old_version_info["release_date"] < 20090114)
+  {
     @mysql_query("
       ALTER TABLE {$g_table_prefix}module_submission_pre_parser_rules
       ADD event SET('ft_process_form','ft_api_process_form', 'ft_update_submission') NULL AFTER rule_name
         ");
 
-	  // register the hooks. This simply adds the POTENTIAL for the module to be called in those
-	  // functions. The spp_parse function does the job of processing the user-defined list of
-	  // parsing rules, as entered via the UI. If there are no rules, nothing happens
-	  ft_register_hook("code", "submission_pre_parser", "start", "ft_process_form", "spp_parse");
-	  ft_register_hook("code", "submission_pre_parser", "start", "ft_api_process_form", "spp_parse");
-	  ft_register_hook("code", "submission_pre_parser", "start", "ft_update_submission", "spp_parse");
-	}
+    // register the hooks. This simply adds the POTENTIAL for the module to be called in those
+    // functions. The spp_parse function does the job of processing the user-defined list of
+    // parsing rules, as entered via the UI. If there are no rules, nothing happens
+    ft_register_hook("code", "submission_pre_parser", "start", "ft_process_form", "spp_parse");
+    ft_register_hook("code", "submission_pre_parser", "start", "ft_api_process_form", "spp_parse");
+    ft_register_hook("code", "submission_pre_parser", "start", "ft_update_submission", "spp_parse");
+  }
+
+  if ($old_version_info["release_date"] < 20100911)
+  {
+    @mysql_query("ALTER TABLE {$g_table_prefix}module_submission_pre_parser_rules TYPE=MyISAM");
+    @mysql_query("ALTER TABLE {$g_table_prefix}module_submission_pre_parser_rule_forms TYPE=MyISAM");
+  }
 }
