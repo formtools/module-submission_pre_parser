@@ -1,18 +1,21 @@
 <?php
 
 require_once("../../global/library.php");
-ft_init_module_page();
 
-$folder = dirname(__FILE__);
-require_once("$folder/library.php");
+use FormTools\Modules;
 
-$settings = ft_get_module_settings();
+$module = Modules::initModulePage("admin");
+$settings = $module->getSettings();
+
 $num_rules_per_page = $settings["num_rules_per_page"];
 
-if (isset($_POST["add_rule"]))
-  list($g_success, $g_message) = spp_add_rule($_POST);
-else if (isset($_GET["delete"]))
-  list($g_success, $g_message) = spp_delete_rule($_GET["delete"]);
+$success = true;
+$message = "":
+if (isset($_POST["add_rule"])) {
+    list($g_success, $g_message) = spp_add_rule($_POST);
+} else if (isset($_GET["delete"])) {
+    list($g_success, $g_message) = spp_delete_rule($_GET["delete"]);
+}
 
 $page = ft_load_module_field("submission_pre_parser", "page", "page", 1);
 $rule_info = ssp_get_rules($num_rules_per_page, $page);
