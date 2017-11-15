@@ -36,4 +36,4 @@ $L["notify_rule_deleted"] = "The pre-parser rule has been deleted.";
 $L["notify_rule_updated"] = "The pre-parser rule has been updated.";
 $L["phrase_num_rules_per_page_c"] = "Num rules listed per page:";
 
-$L["text_help"] = "Please see our <a href=\"http://modules.formtools.org/submission_pre_parser/documentation.php\" target=\"_blank\">online help documentation</a> for information on how to use this module.";
+$L["text_help"] = "Please see our <a href=\"https://docs.formtools.org/modules/submission_pre_parser/\" target=\"_blank\">online help documentation</a> for information on how to use this module.";

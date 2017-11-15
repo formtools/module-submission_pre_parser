@@ -1,6 +1,6 @@
 <?php
 
-namespace FormTools\Modules\SystemCheck;
+namespace FormTools\Modules\SubmissionPreParser;
 
 use FormTools\Core;
 use FormTools\Hooks;
@@ -17,8 +17,22 @@ class Module extends FormToolsModule
     protected $version = "2.0.0";
     protected $date = "2017-11-13";
     protected $originLanguage = "en_us";
-//    protected $jsFiles = array("scripts/tests.js");
-//    protected $cssFiles = array("css/styles.css");
+
+    protected $jsFiles = array(
+        "{FTROOT}/global/codemirror/lib/codemirror.js",
+    );
+    protected $cssFiles = array(
+        "{FTROOT}/global/codemirror/lib/codemirror.css"
+    );
+
+//        "$root_url/global/codemirror/lib/codemirror.js",
+//        "$root_url/global/codemirror/mode/xml/xml.js",
+//        "$root_url/global/codemirror/mode/smarty/smarty.js",
+//        "$root_url/global/codemirror/mode/php/php.js",
+//        "$root_url/global/codemirror/mode/htmlmixed/htmlmixed.js",
+//        "$root_url/global/codemirror/mode/css/css.js",
+//        "$root_url/global/codemirror/mode/javascript/javascript.js",
+//        "$root_url/global/codemirror/mode/clike/clike.js"
 
     protected $nav = array(
         "module_name"     => array("index.php", false),
@@ -52,7 +66,8 @@ class Module extends FormToolsModule
                 CREATE TABLE {PREFIX}module_submission_pre_parser_rule_forms (
                   rule_id mediumint(8) unsigned NOT NULL,
                   form_id mediumint(8) unsigned NOT NULL,
-                  PRIMARY KEY  (rule_id, form_id)
+                  PRIMARY KEY (rule_id, form_id)
+                )
             ");
             $db->execute();
 
@@ -66,7 +81,7 @@ class Module extends FormToolsModule
 
         } catch (PDOException $e) {
             $db->rollbackTransaction();
-            return array(false, "");
+            return array(false, $e->getMessage());
         }
 
         // register the hooks. This simply adds the POTENTIAL for the module to be called in those

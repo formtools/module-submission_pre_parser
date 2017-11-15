@@ -1,10 +1,14 @@
 <?php
 
 require("../../global/library.php");
-ft_init_module_page();
 
-$page_vars = array();
-$page_vars["head_title"] = $L["phrase_add_rule"];
-$page_vars["head_string"] = "<script src=\"$g_root_url/global/codemirror/js/codemirror.js\"></script>";
+use FormTools\Modules;
 
-ft_display_module_page("templates/add.tpl", $page_vars);
+$module = Modules::initModulePage("admin");
+$L = $module->getLangStrings();
+
+$page_vars = array(
+    "head_title" => $L["phrase_add_rule"]
+);
+
+$module->displayPage("templates/add.tpl", $page_vars);
