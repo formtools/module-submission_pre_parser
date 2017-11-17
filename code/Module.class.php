@@ -18,21 +18,25 @@ class Module extends FormToolsModule
     protected $date = "2017-11-13";
     protected $originLanguage = "en_us";
 
+    protected $function_event_map = array(
+        "on_form_submission"     => "FormTools\\Submissions::processFormSubmission",
+        "on_form_submission_api" => "FormTools\\API::processFormSubmission",
+        "on_submission_edit"     => "FormTools\\Submissions::updateSubmission"
+    );
+
     protected $jsFiles = array(
         "{FTROOT}/global/codemirror/lib/codemirror.js",
+        "{FTROOT}/global/codemirror/mode/xml/xml.js",
+        "{FTROOT}/global/codemirror/mode/smarty/smarty.js",
+        "{FTROOT}/global/codemirror/mode/php/php.js",
+        "{FTROOT}/global/codemirror/mode/htmlmixed/htmlmixed.js",
+        "{FTROOT}/global/codemirror/mode/css/css.js",
+        "{FTROOT}/global/codemirror/mode/javascript/javascript.js",
+        "{FTROOT}/global/codemirror/mode/clike/clike.js"
     );
     protected $cssFiles = array(
         "{FTROOT}/global/codemirror/lib/codemirror.css"
     );
-
-//        "$root_url/global/codemirror/lib/codemirror.js",
-//        "$root_url/global/codemirror/mode/xml/xml.js",
-//        "$root_url/global/codemirror/mode/smarty/smarty.js",
-//        "$root_url/global/codemirror/mode/php/php.js",
-//        "$root_url/global/codemirror/mode/htmlmixed/htmlmixed.js",
-//        "$root_url/global/codemirror/mode/css/css.js",
-//        "$root_url/global/codemirror/mode/javascript/javascript.js",
-//        "$root_url/global/codemirror/mode/clike/clike.js"
 
     protected $nav = array(
         "module_name"     => array("index.php", false),
@@ -55,7 +59,7 @@ class Module extends FormToolsModule
                   rule_id mediumint(9) NOT NULL auto_increment,
                   status enum('enabled','disabled') NOT NULL default 'enabled',
                   rule_name varchar(255) NOT NULL,
-                  event set('ft_process_form','ft_api_process_form','ft_update_submission') default NULL,
+                  event set('on_form_submission','on_form_submission_api','on_submission_edit') default NULL,
                   php_code mediumtext NOT NULL,
                   PRIMARY KEY (rule_id)
                 ) AUTO_INCREMENT=1            
@@ -88,7 +92,7 @@ class Module extends FormToolsModule
         // functions. The spp_parse function does the job of processing the user-defined list of
         // parsing rules, as entered via the UI. If there are no rules, nothing happens
         Hooks::registerHook("code", "submission_pre_parser", "start", "FormTools\\Submissions::processFormSubmission", "parse");
-        Hooks::registerHook("code", "submission_pre_parser", "start", "FormTools\\API::apiProcessFormSubmission", "parse");
+        Hooks::registerHook("code", "submission_pre_parser", "start", "FormTools\\API::processFormSubmission", "parse");
         Hooks::registerHook("code", "submission_pre_parser", "start", "FormTools\\Submissions::updateSubmission", "parse");
 
         return array(true, "");
@@ -263,8 +267,8 @@ class Module extends FormToolsModule
         $db->bind("rule_id", $rule_id);
         $db->execute();
 
-        $rule_info = $db->fetch(PDO::FETCH_COLUMN);
-        $rule_info["form_ids"] = spp_get_rule_forms($rule_id);
+        $rule_info = $db->fetch();
+        $rule_info["form_ids"] = $this->getRuleForms($rule_id);
 
         return $rule_info;
     }
@@ -305,7 +309,7 @@ class Module extends FormToolsModule
             FROM {PREFIX}module_submission_pre_parser_rule_forms
             WHERE rule_id = :rule_id
         ");
-        $db->query("rule_id", $rule_id);
+        $db->bind("rule_id", $rule_id);
         $db->execute();
 
         return $db->fetchAll(PDO::FETCH_COLUMN);
@@ -394,10 +398,14 @@ class Module extends FormToolsModule
      */
     public function parse($vars)
     {
-        $vars["form_data"]["form_tools_calling_function"] = $vars["form_tools_calling_function"];
+        // the namespace, class + function of the hook location (as a single string value)
+        $calling_function = $vars["form_tools_hook_info"]["function_name"];
 
+        $vars["form_data"]["form_tools_calling_function"] = $calling_function;
+
+        // looks like the source
         $form_data_key = "form_data";
-        if ($vars["form_tools_calling_function"] == "ft_update_submission") {
+        if ($calling_function == $this->function_event_map["on_submission_edit"]) {
             $form_data_key = "infohash";
         }
 
@@ -422,7 +430,13 @@ class Module extends FormToolsModule
 
             // if this rule hasn't been associated with this calling function, ignore it
             $events = explode(",", $rule_info["event"]);
-            if (!in_array($vars["form_tools_calling_function"], $events)) {
+
+            $matched_functions = array();
+            foreach ($events as $event) {
+                $matched_functions[] = $this->function_event_map[$event];
+            }
+
+            if (!in_array($calling_function, $matched_functions)) {
                 continue;
             }
 

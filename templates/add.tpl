@@ -31,11 +31,11 @@
         <tr>
             <td valign="top">{$L.phrase_when_executed}</td>
             <td>
-                <input type="checkbox" name="event[]" value="ft_process_form" id="event1" checked/>
+                <input type="checkbox" name="event[]" value="on_form_submission" id="event1" checked/>
                 <label for="event1">{$LANG.phrase_on_form_submission}</label><br/>
-                <input type="checkbox" name="event[]" value="ft_api_process_form" id="event2" checked/>
+                <input type="checkbox" name="event[]" value="on_form_submission_api" id="event2" checked/>
                 <label for="event2">{$L.phrase_on_form_submission_via_api}</label><br/>
-                <input type="checkbox" name="event[]" value="ft_update_submission" id="event3"/>
+                <input type="checkbox" name="event[]" value="on_submission_edit" id="event3"/>
                 <label for="event3">{$LANG.phrase_when_submission_is_edited}</label>
             </td>
         </tr>
@@ -50,19 +50,15 @@
         <tr>
             <td valign="top">{$L.phrase_php_code}</td>
             <td>
-
                 <div style="border: 1px solid #666666; padding: 3px">
                     <textarea name="php_code" id="php_code" style="width:100%; height:240px"></textarea>
                 </div>
 
                 <script>
-                  var html_editor = new CodeMirror.fromTextArea(document.getElementById("php_code"), {literal}{{/literal}
-                    {*parserfile: ["parsejavascript.js", "tokenizejavascript.js"],*}
-                    {*path: "{$g_root_url}/global/codemirror/js/",*}
-                    {*stylesheet: "{$g_root_url}/global/codemirror/css/jscolors.css"*}
+                var html_editor = new CodeMirror.fromTextArea(document.getElementById("php_code"), {literal}{{/literal}
+                    mode: "text/x-php"
                   {literal}});{/literal}
                 </script>
-
             </td>
         </tr>
     </table>
