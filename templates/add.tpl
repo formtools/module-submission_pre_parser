@@ -14,7 +14,7 @@
     </tr>
 </table>
 
-{include file='messages.tpl'}
+{ft_include file='messages.tpl'}
 
 <form action="index.php" method="post">
 

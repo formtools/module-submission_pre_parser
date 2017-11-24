@@ -14,7 +14,7 @@
     </tr>
 </table>
 
-{include file='messages.tpl'}
+{ft_include file='messages.tpl'}
 
 <form action="{$same_page}" method="post">
     <input type="hidden" name="rule_id" value="{$rule_info.rule_id}"/>

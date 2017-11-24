@@ -12,7 +12,7 @@
     </tr>
 </table>
 
-{include file='messages.tpl'}
+{ft_include file='messages.tpl'}
 
 {if $num_results == 0}
 
