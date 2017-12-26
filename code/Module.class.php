@@ -5,7 +5,7 @@ namespace FormTools\Modules\SubmissionPreParser;
 use FormTools\Core;
 use FormTools\Hooks;
 use FormTools\Module as FormToolsModule;
-use PDO, PDOException;
+use PDO, Exception;
 
 class Module extends FormToolsModule
 {
@@ -83,7 +83,7 @@ class Module extends FormToolsModule
 
             $db->processTransaction();
 
-        } catch (PDOException $e) {
+        } catch (Exception $e) {
             $db->rollbackTransaction();
             return array(false, $e->getMessage());
         }

@@ -1,4 +1,4 @@
-{include file='modules_header.tpl'}
+{ft_include file='modules_header.tpl'}
 
 <table cellpadding="0" cellspacing="0">
     <tr>
@@ -75,4 +75,4 @@
     </p>
 
 </form>
-{include file='modules_footer.tpl'}
+{ft_include file='modules_footer.tpl'}
