@@ -69,7 +69,7 @@ $HOOKS = array(
     array(
         "hook_type"       => "code",
         "action_location" => "start",
-        "function_name"   => "FormTools\\API::processFormSubmission",
+        "function_name"   => "FormTools\\API->processFormSubmission",
         "hook_function"   => "parse",
         "priority"        => "50"
     ),

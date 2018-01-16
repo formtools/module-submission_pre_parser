@@ -14,13 +14,13 @@ class Module extends FormToolsModule
     protected $author = "Ben Keen";
     protected $authorEmail = "ben.keen@gmail.com";
     protected $authorLink = "https://formtools.org";
-    protected $version = "2.0.1";
-    protected $date = "2017-11-23";
+    protected $version = "2.0.2";
+    protected $date = "2018-01-15";
     protected $originLanguage = "en_us";
 
     protected $function_event_map = array(
         "on_form_submission"     => "FormTools\\Submissions::processFormSubmission",
-        "on_form_submission_api" => "FormTools\\API::processFormSubmission",
+        "on_form_submission_api" => "FormTools\\API->processFormSubmission",
         "on_submission_edit"     => "FormTools\\Submissions::updateSubmission"
     );
 
@@ -91,13 +91,15 @@ class Module extends FormToolsModule
         // register the hooks. This simply adds the POTENTIAL for the module to be called in those
         // functions. The spp_parse function does the job of processing the user-defined list of
         // parsing rules, as entered via the UI. If there are no rules, nothing happens
-        Hooks::registerHook("code", "submission_pre_parser", "start", "FormTools\\Submissions::processFormSubmission", "parse");
-        Hooks::registerHook("code", "submission_pre_parser", "start", "FormTools\\API::processFormSubmission", "parse");
-        Hooks::registerHook("code", "submission_pre_parser", "start", "FormTools\\Submissions::updateSubmission", "parse");
+        $this->resetHooks();
 
         return array(true, "");
     }
 
+    public function upgrade($module_id, $old_module_version)
+    {
+        $this->resetHooks();
+    }
 
     /**
      * The uninstallation script for the Submission Pre-Parser module. This does a custom little
@@ -122,6 +124,16 @@ class Module extends FormToolsModule
         $db->execute();
 
         return array(true, "");
+    }
+
+
+    public function resetHooks()
+    {
+        Hooks::unregisterModuleHooks("submission_pre_parser");
+
+        Hooks::registerHook("code", "submission_pre_parser", "start", "FormTools\\Submissions::processFormSubmission", "parse");
+        Hooks::registerHook("code", "submission_pre_parser", "start", "FormTools\\API->processFormSubmission", "parse");
+        Hooks::registerHook("code", "submission_pre_parser", "start", "FormTools\\Submissions::updateSubmission", "parse");
     }
 
 
