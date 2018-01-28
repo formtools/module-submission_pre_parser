@@ -14,8 +14,8 @@ class Module extends FormToolsModule
     protected $author = "Ben Keen";
     protected $authorEmail = "ben.keen@gmail.com";
     protected $authorLink = "https://formtools.org";
-    protected $version = "2.0.2";
-    protected $date = "2018-01-15";
+    protected $version = "2.0.3";
+    protected $date = "2018-01-28";
     protected $originLanguage = "en_us";
 
     protected $function_event_map = array(
@@ -53,7 +53,6 @@ class Module extends FormToolsModule
         $db = Core::$db;
 
         try {
-            $db->beginTransaction();
             $db->query("
                 CREATE TABLE {PREFIX}module_submission_pre_parser_rules (
                   rule_id mediumint(9) NOT NULL auto_increment,
@@ -80,11 +79,7 @@ class Module extends FormToolsModule
                 VALUES ('num_rules_per_page', '10', 'submission_pre_parser')
             ");
             $db->execute();
-
-            $db->processTransaction();
-
         } catch (Exception $e) {
-            $db->rollbackTransaction();
             return array(false, $e->getMessage());
         }
 
@@ -129,7 +124,7 @@ class Module extends FormToolsModule
 
     public function resetHooks()
     {
-        Hooks::unregisterModuleHooks("submission_pre_parser");
+        $this->clearHooks();
 
         Hooks::registerHook("code", "submission_pre_parser", "start", "FormTools\\Submissions::processFormSubmission", "parse");
         Hooks::registerHook("code", "submission_pre_parser", "start", "FormTools\\API->processFormSubmission", "parse");
