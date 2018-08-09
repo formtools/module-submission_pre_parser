@@ -63,7 +63,8 @@
 
                 <script>
                   var html_editor = new CodeMirror.fromTextArea(document.getElementById("php_code"), {literal}{{/literal}
-                    mode: "text/x-php"
+                    mode: "text/x-php",
+                    lineWrapping: true
                   {literal}});{/literal}
                 </script>
             </td>
