@@ -31,12 +31,14 @@
         <tr>
             <td valign="top">{$L.phrase_when_executed}</td>
             <td>
-                <input type="checkbox" name="event[]" value="on_form_submission" id="event1" checked/>
-                <label for="event1">{$LANG.phrase_on_form_submission}</label><br/>
-                <input type="checkbox" name="event[]" value="on_form_submission_api" id="event2" checked/>
+                <input type="checkbox" name="event[]" value="on_form_submission" id="event1" />
+                <label for="event1">{$L.phrase_on_external_form_submission}</label><br/>
+                <input type="checkbox" name="event[]" value="on_form_submission_api" id="event2" />
                 <label for="event2">{$L.phrase_on_form_submission_via_api}</label><br/>
-                <input type="checkbox" name="event[]" value="on_submission_edit" id="event3"/>
-                <label for="event3">{$LANG.phrase_when_submission_is_edited}</label>
+                <input type="checkbox" name="event[]" value="add_submission_from_ui" id="event3" />
+                <label for="event3">{$L.phrase_when_submission_is_added}</label><br />
+				<input type="checkbox" name="event[]" value="on_submission_edit" id="event4" />
+                <label for="event4">{$LANG.phrase_when_submission_is_edited}</label><br />
             </td>
         </tr>
         <tr>

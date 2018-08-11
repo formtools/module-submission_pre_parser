@@ -4,10 +4,8 @@
 Form Tools - Module Language File
 ---------------------------------
 
-File created: Oct 24th, 2:46 AM
-
 If you would like to help translate this module, please visit:
-http://www.formtools.org/translations/
+https://translations.formtools.org/
 */
 
 $L = array();
@@ -25,7 +23,9 @@ $L["phrase_rule_id"] = "Rule ID";
 $L["phrase_rule_name"] = "Rule Name";
 $L["phrase_php_code"] = "PHP Code";
 $L["phrase_when_executed"] = "When Executed";
-$L["phrase_on_form_submission_via_api"] = "On form submission, via API";
+$L["phrase_on_external_form_submission"] = "On form submission, via <a href=\"https://docs.formtools.org/userdoc/form_management/form_types/\" target=\"_blank\">external form</a>";
+$L["phrase_on_form_submission_via_api"] = "On form submission, via <a href=\"https://docs.formtools.org/api/v2/\" target=\"_blank\">API</a>";
+$L["phrase_when_submission_is_added"] = "When submission is added, via Form Tools UI";
 
 $L["notify_no_rules"] = "There are no rules defined for the pre-parser. Please click the button below to add a new rule.";
 $L["notify_rule_not_added"] = "There was a problem adding this pre-parser rule.";

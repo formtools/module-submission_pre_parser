@@ -3,8 +3,10 @@
 namespace FormTools\Modules\SubmissionPreParser;
 
 use FormTools\Core;
+use FormTools\General;
 use FormTools\Hooks;
 use FormTools\Module as FormToolsModule;
+use FormTools\Views;
 use PDO, Exception;
 
 class Module extends FormToolsModule
@@ -14,14 +16,15 @@ class Module extends FormToolsModule
     protected $author = "Ben Keen";
     protected $authorEmail = "ben.keen@gmail.com";
     protected $authorLink = "https://formtools.org";
-    protected $version = "2.0.3";
-    protected $date = "2018-01-28";
+    protected $version = "2.0.4";
+    protected $date = "2018-08-11";
     protected $originLanguage = "en_us";
 
     protected $function_event_map = array(
         "on_form_submission"     => "FormTools\\Submissions::processFormSubmission",
         "on_form_submission_api" => "FormTools\\API->processFormSubmission",
-        "on_submission_edit"     => "FormTools\\Submissions::updateSubmission"
+		"on_submission_edit"     => "FormTools\\Submissions::updateSubmission",
+		"add_submission_from_ui" => "FormTools\\Views::getNewViewSubmissionDefaults"
     );
 
     protected $jsFiles = array(
@@ -58,7 +61,7 @@ class Module extends FormToolsModule
                   rule_id mediumint(9) NOT NULL auto_increment,
                   status enum('enabled','disabled') NOT NULL default 'enabled',
                   rule_name varchar(255) NOT NULL,
-                  event set('on_form_submission','on_form_submission_api','on_submission_edit') default NULL,
+                  event set('on_form_submission','on_form_submission_api','on_submission_edit','add_submission_from_ui') default NULL,
                   php_code mediumtext NOT NULL,
                   PRIMARY KEY (rule_id)
                 ) AUTO_INCREMENT=1            
@@ -93,7 +96,11 @@ class Module extends FormToolsModule
 
     public function upgrade($module_id, $old_module_version)
     {
-        $this->resetHooks();
+		$this->resetHooks();
+
+        if (General::isVersionEarlierThan($old_module_version, "2.0.4")) {
+            $this->addNewAddSubmissionEventDbField();
+        }
     }
 
     /**
@@ -126,11 +133,11 @@ class Module extends FormToolsModule
     {
         $this->clearHooks();
 
-        Hooks::registerHook("code", "submission_pre_parser", "start", "FormTools\\Submissions::processFormSubmission", "parse");
-        Hooks::registerHook("code", "submission_pre_parser", "start", "FormTools\\API->processFormSubmission", "parse");
-        Hooks::registerHook("code", "submission_pre_parser", "start", "FormTools\\Submissions::updateSubmission", "parse");
+        Hooks::registerHook("code", "submission_pre_parser", "start", "FormTools\\Submissions::processFormSubmission", "newSubmissionFromExternalFormHook");
+		Hooks::registerHook("code", "submission_pre_parser", "start", "FormTools\\Submissions::updateSubmission", "updateSubmissionHook");
+		Hooks::registerHook("code", "submission_pre_parser", "end", "FormTools\\Views::getNewViewSubmissionDefaults", "newSubmissionFromUIHook");
+        Hooks::registerHook("code", "submission_pre_parser", "start", "FormTools\\API->processFormSubmission", "updateSubmissionFromApi");
     }
-
 
     /**
      * Returns a page worth of Submission Pre-Parser rules for display purposes.
@@ -401,20 +408,14 @@ class Module extends FormToolsModule
      * figures out what rules have been defined by the administrator for this form and processes the incoming
      * data through it.
      *
+	 * @param string $vars
+	 * @param string $form_data_key the location that contains the key->value pairs of the form data
      * @return array the updated POST data.
      */
-    public function parse($vars)
+    public function parse($vars, $form_data_key)
     {
         // the namespace, class + function of the hook location (as a single string value)
         $calling_function = $vars["form_tools_hook_info"]["function_name"];
-
-        $vars["form_data"]["form_tools_calling_function"] = $calling_function;
-
-        // looks like the source
-        $form_data_key = "form_data";
-        if ($calling_function == $this->function_event_map["on_submission_edit"]) {
-            $form_data_key = "infohash";
-        }
 
         $_POST = $vars[$form_data_key];
 
@@ -453,7 +454,107 @@ class Module extends FormToolsModule
         $return_vals = array($form_data_key => $_POST);
 
         return $return_vals;
-    }
+	}
+	
 
+	public function updateSubmissionHook($vars)
+	{
+		return $this->parse($vars, "infohash");
+	}
+
+	/**
+	 * Hook for submissions created within the Form Tools interface. This hook is different from the others: it
+	 * ties in with the Views::getNewViewSubmissionDefaults() method to append whatever additional POST vars are 
+	 * added by the user into $_POST within the hook.
+	 * 
+	 * Basically, to keep the UI consistent across all hooks, the user can STILL define [fieldname] => value 
+	 * pairs in the $_POST var, even though it's completely different to what's really going on behind the 
+	 * scenes.
+	 */
+	public function newSubmissionFromUIHook($vars)
+	{
+		// our hook doesn't contain the form ID so we need to find it. Needed by parse() to get the SPP rules
+		$view_info = Views::getView($vars["view_id"]);
+		$vars["form_id"] = $view_info["form_id"];
+
+		// for new submissions we don't have a convenient key-value pair hash somewhere containing the list 
+		// of data about to be inserted. Instead, $vars["results"] is an array of the following structure 
+		// containing info about the default values to be inserted:
+		// [0] => Array
+		// (
+		//     [view_id] => X
+		// 	   [field_id] => Y
+		// 	   [default_value] => value here 
+		// 	   [list_order] => 1
+		// )
+		$result = $this->parse($vars, "spp_scoped_vars");
+
+		// find out what the user added to $_POST within their rule. These may or may not be valid field names.
+		$overridden_field_names = array_keys($result["spp_scoped_vars"]);
+
+		// now we're going to update the data to be used for constructing default values. Use any predefined
+		// values defined in the UI as the starting point (if defined), but this module will overwrite them 
+		// if the user entered it in their SPP rule
+
+		$default_values_field_id_map = array(); // field_id => index
+		$final_data = array();
+		if (isset($vars["results"])) {
+			for ($i=0; $i<count($vars["results"]); $i++) {
+				$default_values_field_id_map["field_id-" . $vars["results"][$i]["field_id"]] = $i;
+			}
+			$final_data = $vars["results"];
+		}
+		
+		foreach ($view_info["fields"] as $field_info) {
+			$curr_field_name = $field_info["field_name"];
+			$key = "field_id-" . $field_info["field_id"];
+
+			// if the user hasn't defined anything for this field, don't worry about it
+			if (!in_array($curr_field_name, $overridden_field_names)) {
+				continue;
+			}
+
+			$new_data = array(
+				"view_id" => $vars["view_id"],
+				"field_id" => $field_info["field_id"],
+				"default_value" => $result["spp_scoped_vars"][$curr_field_name]
+			);
+
+			// if the user has a default value preset for this field, we'll OVERWRITE that value
+			// from whatever's in the SPP rule
+			if (array_key_exists($key, $default_values_field_id_map)) {
+				$index = $default_values_field_id_map[$key];
+				$final_data[$index] = $new_data;
+			} else {
+				$final_data[] = $new_data;
+			}
+		}
+
+		// we return "results" because that's what the Views::getNewViewSubmissionDefaults() it permitted to 
+		// overwrite
+		return array(
+			"results" => $final_data
+		);
+	}
+
+	public function newSubmissionFromExternalFormHook($vars)
+	{
+		return $this->parse($vars, "form_data");
+	}
+
+	public function updateSubmissionFromApi($vars)
+	{
+		return $this->parse($vars, "form_data");
+	}
+
+	private function addNewAddSubmissionEventDbField () {
+		$db = Core::$db;
+
+		$db->query("
+			ALTER TABLE {PREFIX}module_submission_pre_parser_rules
+			CHANGE event event SET('on_form_submission','on_form_submission_api','on_submission_edit','add_submission_from_ui')
+			DEFAULT NULL
+		");
+		$db->execute();
+	}
 }
-

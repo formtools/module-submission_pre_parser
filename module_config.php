@@ -26,7 +26,7 @@ $STRUCTURE["tables"]["module_submission_pre_parser_rules"] = array(
     ),
     array(
         "Field"   => "event",
-        "Type"    => "set('on_form_submission','on_form_submission_api','on_submission_edit')",
+        "Type"    => "set('on_form_submission','on_form_submission_api','on_submission_edit','add_submission_from_ui')",
         "Null"    => "YES",
         "Key"     => "",
         "Default" => ""
@@ -63,21 +63,28 @@ $HOOKS = array(
         "hook_type"       => "code",
         "action_location" => "start",
         "function_name"   => "FormTools\\Submissions::processFormSubmission",
-        "hook_function"   => "parse",
-        "priority"        => "50"
-    ),
-    array(
-        "hook_type"       => "code",
-        "action_location" => "start",
-        "function_name"   => "FormTools\\API->processFormSubmission",
-        "hook_function"   => "parse",
+        "hook_function"   => "newSubmissionFromExternalFormHook",
         "priority"        => "50"
     ),
     array(
         "hook_type"       => "code",
         "action_location" => "start",
         "function_name"   => "FormTools\\Submissions::updateSubmission",
-        "hook_function"   => "parse",
+        "hook_function"   => "updateSubmissionHook",
+        "priority"        => "50"
+	),
+    array(
+        "hook_type"       => "code",
+        "action_location" => "end",
+        "function_name"   => "FormTools\\Views::getNewViewSubmissionDefaults",
+        "hook_function"   => "newSubmissionFromUIHook",
+        "priority"        => "50"
+    ),
+    array(
+        "hook_type"       => "code",
+        "action_location" => "start",
+        "function_name"   => "FormTools\\API->processFormSubmission",
+        "hook_function"   => "updateSubmissionFromApi",
         "priority"        => "50"
     )
 );

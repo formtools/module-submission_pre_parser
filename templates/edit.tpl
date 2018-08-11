@@ -36,13 +36,16 @@
             <td>
                 <input type="checkbox" name="event[]" value="on_form_submission" id="event1"
                        {if "on_form_submission"|in_array:$rule_info.event}checked{/if} />
-                <label for="event1">{$LANG.phrase_on_form_submission}</label><br/>
+                <label for="event1">{$L.phrase_on_external_form_submission}</label><br/>
                 <input type="checkbox" name="event[]" value="on_form_submission_api" id="event2"
                        {if "on_form_submission_api"|in_array:$rule_info.event}checked{/if} />
                 <label for="event2">{$L.phrase_on_form_submission_via_api}</label><br/>
-                <input type="checkbox" name="event[]" value="on_submission_edit" id="event3"
+                <input type="checkbox" name="event[]" value="add_submission_from_ui" id="event3"
+                       {if "add_submission_from_ui"|in_array:$rule_info.event}checked{/if} />
+                <label for="event3">{$L.phrase_when_submission_is_added}</label><br />
+				<input type="checkbox" name="event[]" value="on_submission_edit" id="event4"
                        {if "on_submission_edit"|in_array:$rule_info.event}checked{/if} />
-                <label for="event3">{$LANG.phrase_when_submission_is_edited}</label>
+                <label for="event4">{$LANG.phrase_when_submission_is_edited}</label><br />
             </td>
         </tr>
         <tr>
