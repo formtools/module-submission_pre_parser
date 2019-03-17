@@ -46,7 +46,7 @@
             <td><input type="text" name="rule_name" value="" style="width:300px" maxlength="255"/></td>
         </tr>
         <tr>
-            <td valign="top">{$LANG.word_form_sp}</td>
+            <td valign="top">{$L.word_form_sp}</td>
             <td>{forms_dropdown name_id="form_ids[]" is_multiple=true}</td>
         </tr>
         <tr>

@@ -54,7 +54,7 @@
                        maxlength="255"/></td>
         </tr>
         <tr>
-            <td valign="top">{$LANG.word_form_sp}</td>
+            <td valign="top">{$L.word_form_sp}</td>
             <td>{forms_dropdown name_id="form_ids[]" is_multiple=true default=$rule_info.form_ids}</td>
         </tr>
         <tr>

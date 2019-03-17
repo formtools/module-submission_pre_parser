@@ -15,13 +15,11 @@
 {ft_include file='messages.tpl'}
 
 {if $num_results == 0}
-
     <div class="notify margin_bottom_large">
         <div style="padding:8px">
             {$L.notify_no_rules}
         </div>
     </div>
-
 {else}
 
     {$pagination}
@@ -30,7 +28,7 @@
             <th width="30"></th>
             <th>{$L.phrase_rule_name}</th>
             <th>{$LANG.word_status}</th>
-            <th>{$LANG.word_form_sp}</th>
+            <th>{$L.word_form_sp}</th>
             <th class="edit"></th>
             <th class="del"></th>
         </tr>
@@ -49,7 +47,7 @@
                 </td>
                 <td class="pad_left_small">
                     {if $result.form_ids|@count == 0}
-                        <span class="medium_grey">{$LANG.phrase_no_forms}</span>
+                        <span class="medium_grey">{$L.phrase_no_forms}</span>
                     {else}
                         {forms_dropdown name_id="tmp" display_single_form_as_text=true only_show_forms=$result.form_ids}
                     {/if}
